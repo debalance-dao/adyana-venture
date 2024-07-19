@@ -1,5 +1,5 @@
 {
-  "name": "my-turborepo",
+  "name": "vc-adyana",
   "private": true,
   "scripts": {
     "build": "turbo build",
