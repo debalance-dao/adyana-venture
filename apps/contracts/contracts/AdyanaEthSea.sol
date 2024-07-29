@@ -91,7 +91,10 @@ contract AdyanaToken is ERC20Interface {
         require(msg.value >= tokenPrice, "Minimum price is 1 gwei!");
 
         uint256 tokensToPurchase = (msg.value / tokenPrice);
-        require(balances[owner] >= tokensToPurchase, "Not enough tokens available");
+        require(
+            balances[owner] >= tokensToPurchase,
+            "Not enough tokens available"
+        );
 
         balances[msg.sender] = balances[msg.sender].add(tokensToPurchase);
         balances[owner] = balances[owner].sub(tokensToPurchase);
@@ -101,7 +104,10 @@ contract AdyanaToken is ERC20Interface {
         require(msg.value >= tokenPrice, "Minimum price is 1 gwei!");
 
         uint256 tokensToPurchase = (msg.value / tokenPrice);
-        require(balances[owner] >= tokensToPurchase, "Not enough tokens available");
+        require(
+            balances[owner] >= tokensToPurchase,
+            "Not enough tokens available"
+        );
 
         balances[msg.sender] = balances[msg.sender].add(tokensToPurchase);
         balances[owner] = balances[owner].sub(tokensToPurchase);
@@ -114,25 +120,37 @@ contract AdyanaToken is ERC20Interface {
         thisProject.raisedAmount = thisProject.raisedAmount.add(_amount);
     }
 
-    function stakeTokens(uint _amount, uint _periodInSeconds) public onlyHolder {
+    function stakeTokens(
+        uint _amount,
+        uint _periodInSeconds
+    ) public onlyHolder {
         require(balances[msg.sender] >= _amount, "insufficient balance!");
         require(
-            _periodInSeconds == 30 days || _periodInSeconds == 60 days || _periodInSeconds == 90 days ||
-            _periodInSeconds == 180 days || _periodInSeconds == 365 days || _periodInSeconds == 730 days,
+            _periodInSeconds == 30 days ||
+                _periodInSeconds == 60 days ||
+                _periodInSeconds == 90 days ||
+                _periodInSeconds == 180 days ||
+                _periodInSeconds == 365 days ||
+                _periodInSeconds == 730 days,
             "invalid staking period!"
         );
 
         balances[msg.sender] = balances[msg.sender].sub(_amount);
-        stakes[msg.sender].push(Stake({
-            amount: _amount,
-            timestamp: block.timestamp,
-            period: _periodInSeconds,
-            isActive: true
-        }));
+        stakes[msg.sender].push(
+            Stake({
+                amount: _amount,
+                timestamp: block.timestamp,
+                period: _periodInSeconds,
+                isActive: true
+            })
+        );
     }
 
     function unstakeTokens(uint _stakeIndex) public onlyHolder {
-        require(_stakeIndex < stakes[msg.sender].length, "invalid stake index!");
+        require(
+            _stakeIndex < stakes[msg.sender].length,
+            "invalid stake index!"
+        );
 
         Stake storage userStake = stakes[msg.sender][_stakeIndex];
         require(userStake.isActive, "stake is already inactive!");
@@ -142,7 +160,10 @@ contract AdyanaToken is ERC20Interface {
         );
 
         uint amount = userStake.amount;
-        uint reward = calculateStakingReward(userStake.amount, userStake.period);
+        uint reward = calculateStakingReward(
+            userStake.amount,
+            userStake.period
+        );
         userStake.isActive = false;
         balances[msg.sender] = balances[msg.sender].add(amount).add(reward);
     }
@@ -157,13 +178,24 @@ contract AdyanaToken is ERC20Interface {
         return totalStaked;
     }
 
-    function viewStakeDetails(address _staker, uint _stakeIndex) public view returns (uint, uint, uint, bool) {
+    function viewStakeDetails(
+        address _staker,
+        uint _stakeIndex
+    ) public view returns (uint, uint, uint, bool) {
         require(_stakeIndex < stakes[_staker].length, "invalid stake index!");
         Stake storage userStake = stakes[_staker][_stakeIndex];
-        return (userStake.amount, userStake.timestamp, userStake.period, userStake.isActive);
+        return (
+            userStake.amount,
+            userStake.timestamp,
+            userStake.period,
+            userStake.isActive
+        );
     }
 
-    function calculateStakingReward(uint _amount, uint _period) internal pure returns (uint) {
+    function calculateStakingReward(
+        uint _amount,
+        uint _period
+    ) internal pure returns (uint) {
         uint apr;
         if (_period == 30 days) {
             apr = APR_30;
@@ -183,8 +215,14 @@ contract AdyanaToken is ERC20Interface {
         return (_amount.mul(apr).mul(_period)).div(365 days * 100);
     }
 
-    function withdrawEther(address payable _to, uint _amount) external onlyOwner {
-        require(_amount <= address(this).balance, "insufficient contract balance");
+    function withdrawEther(
+        address payable _to,
+        uint _amount
+    ) external onlyOwner {
+        require(
+            _amount <= address(this).balance,
+            "insufficient contract balance"
+        );
         _to.transfer(_amount);
         emit Withdrawal(_to, _amount);
     }
