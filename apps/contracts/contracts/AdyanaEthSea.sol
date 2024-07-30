@@ -25,12 +25,12 @@ contract AdyanaToken is ERC20Interface {
     uint256 public constant tokenPrice = 1 gwei;
     uint public totalProject;
 
-    uint public constant APR_30 = 10;
-    uint public constant APR_60 = 12;
-    uint public constant APR_90 = 14;
-    uint public constant APR_180 = 16;
-    uint public constant APR_365 = 20;
-    uint public constant APR_730 = 25;
+    uint internal constant APR_30 = 10;
+    uint internal constant APR_60 = 12;
+    uint internal constant APR_90 = 14;
+    uint internal constant APR_180 = 16;
+    uint internal constant APR_365 = 20;
+    uint internal constant APR_730 = 25;
 
     struct Project {
         string name;
@@ -194,25 +194,25 @@ contract AdyanaToken is ERC20Interface {
 
     function calculateStakingReward(
         uint _amount,
-        uint _period
+        uint _periodInSeconds
     ) internal pure returns (uint) {
         uint apr;
-        if (_period == 30 days) {
+        if (_periodInSeconds == 30 days) {
             apr = APR_30;
-        } else if (_period == 60 days) {
+        } else if (_periodInSeconds == 60 days) {
             apr = APR_60;
-        } else if (_period == 90 days) {
+        } else if (_periodInSeconds == 90 days) {
             apr = APR_90;
-        } else if (_period == 180 days) {
+        } else if (_periodInSeconds == 180 days) {
             apr = APR_180;
-        } else if (_period == 365 days) {
+        } else if (_periodInSeconds == 365 days) {
             apr = APR_365;
-        } else if (_period == 730 days) {
+        } else if (_periodInSeconds == 730 days) {
             apr = APR_730;
         } else {
             revert("invalid staking period!");
         }
-        return (_amount.mul(apr).mul(_period)).div(365 days * 100);
+        return (_amount.mul(apr).mul(_periodInSeconds)).div(365 days * 100);
     }
 
     function withdrawEther(
@@ -225,5 +225,28 @@ contract AdyanaToken is ERC20Interface {
         );
         _to.transfer(_amount);
         emit Withdrawal(_to, _amount);
+    }
+
+    function claimStakingRewards(uint _stakeIndex) public onlyHolder {
+        require(
+            _stakeIndex < stakes[msg.sender].length,
+            "invalid stake index!"
+        );
+
+        Stake storage userStake = stakes[msg.sender][_stakeIndex];
+        require(userStake.isActive, "stake is already inactive!");
+        require(
+            block.timestamp >= userStake.timestamp + userStake.period,
+            "staking period not yet over!"
+        );
+
+        uint reward = calculateStakingReward(
+            userStake.amount,
+            userStake.period
+        );
+        userStake.isActive = false;
+        balances[msg.sender] = balances[msg.sender].add(userStake.amount).add(
+            reward
+        );
     }
 }
