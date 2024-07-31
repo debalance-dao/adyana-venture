@@ -65,9 +65,12 @@ export default function LandingPage() {
           <ScrollArea className="rounded-md whitespace-nowrap">
             <div className="flex w-max space-x-4">
               {Array.from({ length: 10 }).map((d, index) => (
-                <Card key={d} className="w-[400px] bg-[#222222] border-none">
+                <Card
+                  key={`${d}-keyssss`}
+                  className="w-[400px] bg-[#222222] border-none"
+                >
                   <CardHeader>
-                    <div className="bg-yellow-600 h-[177px] rounded-lg"></div>
+                    <div className="bg-yellow-600 h-[177px] rounded-lg" />
                   </CardHeader>
                   <CardContent className="flex flex-col text-white gap-4">
                     <div className="flex justify-between gap-2">
@@ -105,7 +108,7 @@ export default function LandingPage() {
           <div className="grid grid-cols-3 gap-x-5 justify-between gap-y-4 p-8">
             {Array.from({ length: 6 }).map((d) => (
               <div
-                key={d}
+                key={`${d}-feats`}
                 className="flex justify-center flex-col items-center text-center w-fit gap-5"
               >
                 <div className="flex justify-center flex-col items-center">
