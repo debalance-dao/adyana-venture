@@ -1,7 +1,7 @@
 "use client";
 import useWalletClient from "@/hooks/useWalletClient";
 import { useState } from "react";
-import { type Address } from "viem";
+import type { Address } from "viem";
 export default function Header() {
   const { requestAddresses, addChain } = useWalletClient();
   const [add, setAdd] = useState<Address | null>(null);
