@@ -142,6 +142,33 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+      <section className="flex justify-center mb-36">
+        <div className="grid grid-cols-2 w-full max-w-7xl p-[70px] rounded-lg bg-[#232323] gap-20">
+          <div className="">
+            <div className="text-[40px] font-medium">
+              Want to invest in a project on Adiyana?
+            </div>
+            <button
+              type="button"
+              className="py-[12px] px-[46px] border border-[#FCD22F] font-medium text-2xl mt-8"
+            >
+              EXPLORE {">"}
+            </button>
+          </div>
+          <div className="flex flex-col gap-8 justify-center">
+            {[
+              "Diverse Investment Opportunities",
+              "Secure and Transparent Platform",
+              "Expert Guidance and Support",
+            ].map((d) => (
+              <div key={d} className="flex gap-4 items-center">
+                <span className="h-[28px] w-[28px] flex rounded-full aspect-square bg-[#FCD22F]" />
+                {d}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
     </main>
   );
 }
