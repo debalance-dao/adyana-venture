@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.className} flex h-screen flex-col bg-[#151100]`}
+        className={`${inter.className} flex h-screen flex-col bg-[#151100] justify-between`}
       >
         <ThemeProvider
           attribute="class"
