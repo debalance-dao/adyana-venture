@@ -35,7 +35,7 @@ contract AdyanaToken is ERC20Interface {
     struct Project {
         string name;
         string description;
-        uint raisedAmount;
+        uint raisedFunds;
         uint totalVoters;
     }
 
@@ -49,6 +49,11 @@ contract AdyanaToken is ERC20Interface {
     mapping(address => uint) public balances;
     mapping(uint => Project) public projectList;
     mapping(address => Stake[]) public stakes;
+    struct Voter {
+        uint amount;
+        bool isAlreadyVote;
+    }
+    mapping(address => mapping(uint => Voter)) public voters;
 
     event Withdrawal(address indexed to, uint amount);
 
@@ -117,7 +122,7 @@ contract AdyanaToken is ERC20Interface {
         require(totalProject > 0, "no project to vote!");
         balances[msg.sender] = balances[msg.sender].sub(_amount);
         Project storage thisProject = projectList[_projectNum];
-        thisProject.raisedAmount = thisProject.raisedAmount.add(_amount);
+        thisProject.raisedFunds = thisProject.raisedFunds.add(_amount);
     }
 
     function stakeTokens(
@@ -248,5 +253,30 @@ contract AdyanaToken is ERC20Interface {
         balances[msg.sender] = balances[msg.sender].add(userStake.amount).add(
             reward
         );
+    }
+
+    function addProject(
+        string memory _name,
+        string memory _description
+    ) public onlyOwner {
+        Project storage thisProject = projectList[totalProject];
+        thisProject.name = _name;
+        thisProject.description = _description;
+        totalProject++;
+    }
+
+    function voteProject(uint _projectNum) public onlyHolder {
+        require(_projectNum < totalProject, "Invalid project number");
+        require(
+            voters[msg.sender][_projectNum].isAlreadyVote != true,
+            "you already vote!"
+        );
+        require(
+            voters[msg.sender][_projectNum].amount != 0,
+            "You are not an investor of this project"
+        );
+
+        voters[msg.sender][_projectNum].isAlreadyVote = true;
+        projectList[_projectNum].totalVoters++;
     }
 }
