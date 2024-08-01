@@ -1,5 +1,21 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ChevronDown } from "lucide-react";
 
 export default function StakingPage() {
   return (
@@ -82,9 +98,93 @@ export default function StakingPage() {
                   <Switch className="bg-[#242424]" />
                   <span className="">My Staking Pool</span>
                 </div>
-                <div className="bg-[#F8C200] text-[20px] text-black px-16 py-2 h-full rounded-sm">
-                  STAKING
-                </div>
+                <Dialog>
+                  <DialogTrigger>
+                    <button
+                      type="button"
+                      className="bg-[#F8C200] text-[20px] text-black px-16 py-2 h-full rounded-sm"
+                    >
+                      Staking
+                    </button>
+                  </DialogTrigger>
+                  <DialogContent className="bg-[#1b1b1b] text-white p-16 ">
+                    <DialogHeader>
+                      <DialogTitle className="w-full text-center text-[36px] font-medium">
+                        Staking
+                      </DialogTitle>
+                    </DialogHeader>
+                    <div className="w-full space-y-[40px]">
+                      <div className="flex gap-2 justify-between">
+                        <div className="">Token</div>
+                        <div className="">ADY</div>
+                      </div>
+                      <div className="flex flex-col gap-5">
+                        <label
+                          htmlFor="amount"
+                          className="text-[16px] font-normal text-[#9A9A9A]"
+                        >
+                          Choose how many days
+                        </label>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger className="bg-[#242424] p-2 border border-[#9A9A9A] rounded-sm flex justify-end px-[22px] h-[50px] items-center">
+                            <ChevronDown />
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent
+                            className="left-0 border w-[380px] bg-[#242424] text-white"
+                            align="end"
+                          >
+                            <DropdownMenuLabel>Stake in</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            {[
+                              {
+                                days: 30,
+                              },
+                              {
+                                days: 60,
+                              },
+                              {
+                                days: 90,
+                              },
+                              {
+                                days: 365,
+                              },
+                              {
+                                days: 730,
+                              },
+                            ].map((d) => (
+                              <DropdownMenuItem
+                                key={d.days}
+                                className="text-xl hover:bg-gray-300"
+                              >
+                                {d.days} days
+                              </DropdownMenuItem>
+                            ))}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                      <div className="flex flex-col gap-5">
+                        <label
+                          htmlFor="amount"
+                          className="text-[16px] font-normal text-[#9A9A9A]"
+                        >
+                          Input the amount
+                        </label>
+                        <input
+                          type="number"
+                          name=""
+                          id="amount"
+                          className="bg-[#242424] p-2 border border-[#9A9A9A] rounded-sm h-[50px]"
+                        />
+                      </div>
+                      <button
+                        type="button"
+                        className="bg-[#F8C200] text-[20px] text-black w-full py-2 rounded-sm h-[60px]"
+                      >
+                        STAKE
+                      </button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </span>
             </div>
             <TabsContent value="live">
