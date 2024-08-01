@@ -1,5 +1,6 @@
 "use client";
 import useWalletClient from "@/hooks/useWalletClient";
+import Link from "next/link";
 import { useState } from "react";
 import type { Address } from "viem";
 export default function Header() {
@@ -10,10 +11,10 @@ export default function Header() {
       <div className="max-w-7xl flex justify-between w-full">
         <div className="text-[#F8C200]">Adyana</div>
         <nav className="flex gap-4">
-          {["home", "staking", "about company"].map((d) => (
-            <div className="" key={d}>
-              {d}
-            </div>
+          {["home", "staking", "buy"].map((d) => (
+            <Link href={`/${d}`} key={d}>
+              <div className="">{d}</div>
+            </Link>
           ))}
         </nav>
         <div className="">
