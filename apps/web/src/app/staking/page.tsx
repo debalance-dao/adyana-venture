@@ -1,3 +1,4 @@
+"use client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import {
@@ -16,8 +17,31 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown } from "lucide-react";
+import adyContract from "../../../../contracts/artifacts/contracts/AdyanaEthSea.sol/AdyanaToken.json";
+import type { AdyanaToken$Type } from "../../../../contracts/artifacts/contracts/AdyanaEthSea.sol/AdyanaToken";
+import useWalletClient from "@/hooks/useWalletClient";
+import usePublicClient from "@/hooks/usePublicClient";
+import { manta } from "viem/chains";
+
+type ExtractProperty<T, K extends keyof T> = T[K];
+type TContractABI = ExtractProperty<AdyanaToken$Type, "abi">;
 
 export default function StakingPage() {
+  const { writeContract } = useWalletClient();
+  const { simulateContract } = usePublicClient();
+
+  const voteProject = async () => {
+    const { request } = await simulateContract({
+      abi: adyContract.abi as TContractABI,
+      account: "0x123",
+      chain: manta,
+      address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+      functionName: "voteProject",
+      args: [1 as unknown as bigint],
+    });
+    writeContract(request);
+  };
+
   return (
     <main className="relative text-white">
       {/* <div className="absolute top-0- right-0 -z-40 border overflow-hidden flex">
