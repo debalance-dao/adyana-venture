@@ -47,7 +47,7 @@ export default function Header() {
               <DialogTrigger>
                 <button
                   type="button"
-                  className="bg-[#F8C200] p-2 rounded-md overflow-hidden w-[100px]"
+                  className="bg-[#F8C200] text-black p-2 rounded-md overflow-hidden w-[100px]"
                 >
                   <span className="">{add}</span>
                 </button>
