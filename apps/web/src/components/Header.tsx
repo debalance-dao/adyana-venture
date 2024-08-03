@@ -1,7 +1,7 @@
 "use client";
 import useWalletClient from "@/hooks/useWalletClient";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Address } from "viem";
 import {
   Dialog,
@@ -10,10 +10,43 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import usePublicClient from "@/hooks/usePublicClient";
+import { customChain } from "@/lib/blockchain";
+import contract from "@/lib/contract";
 
 export default function Header() {
-  const { requestAddresses, addChain } = useWalletClient();
+  const { requestAddresses, getAddresses } = useWalletClient();
+  const { readContract } = usePublicClient();
   const [add, setAdd] = useState<Address | null>(null);
+  const [balance, setBalance] = useState();
+
+  const interactConfig = {
+    abi: contract.abi,
+    chain: customChain.localNet,
+    address: contract.address,
+  };
+
+  const getWalletAddress = async () => {
+    const [account] = await getAddresses();
+    return account;
+  };
+  const getBalance = async () => {
+    const userBalance = await readContract({
+      abi: interactConfig.abi,
+      address: interactConfig.address,
+      account: await getWalletAddress(),
+      functionName: "balanceOf",
+      args: [await getWalletAddress()],
+    });
+    return userBalance;
+  };
+  useEffect(() => {
+    (async () => {
+      const userbalance = await getBalance();
+      console.log({ userbalance });
+      setBalance(userbalance);
+    })();
+  }, []);
   return (
     <header className="flex justify-center text-white p-8">
       <div className="max-w-7xl flex justify-between w-full">
@@ -130,7 +163,7 @@ export default function Header() {
                           </clipPath>
                         </defs>
                       </svg>
-                      <div className="">0x12345</div>
+                      <div className="grow w-[80px] overflow-hidden">{add}</div>
                     </div>
                     <button type="button" className="text-[#E73959]">
                       Disconnect
@@ -141,7 +174,7 @@ export default function Header() {
                       Balance
                     </span>
                     <div className="text-xl text-white font-medium">
-                      0.000555 ADY
+                      {Number(balance)} ADY
                     </div>
                   </div>
                 </div>
