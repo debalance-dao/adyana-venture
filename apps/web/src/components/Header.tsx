@@ -18,7 +18,7 @@ export default function Header() {
   const { requestAddresses, getAddresses } = useWalletClient();
   const { readContract } = usePublicClient();
   const [add, setAdd] = useState<Address | null>(null);
-  const [balance, setBalance] = useState();
+  const [balance, setBalance] = useState<number>();
 
   const interactConfig = {
     abi: contract.abi,
@@ -44,7 +44,7 @@ export default function Header() {
     (async () => {
       const userbalance = await getBalance();
       console.log({ userbalance });
-      setBalance(userbalance);
+      setBalance(Number(userbalance));
     })();
   }, []);
   return (
@@ -174,7 +174,7 @@ export default function Header() {
                       Balance
                     </span>
                     <div className="text-xl text-white font-medium">
-                      {Number(balance)} ADY
+                      {balance} ADY
                     </div>
                   </div>
                 </div>
