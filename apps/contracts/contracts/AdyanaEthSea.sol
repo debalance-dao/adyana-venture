@@ -279,4 +279,14 @@ contract AdyanaToken is ERC20Interface {
         voters[msg.sender][_projectNum].isAlreadyVote = true;
         projectList[_projectNum].totalVoters++;
     }
+
+    function getAllProjects() public view returns (Project[] memory) {
+        Project[] memory projects = new Project[](totalProject);
+
+        for (uint i = 0; i < totalProject; i++) {
+            projects[i] = projectList[i];
+        }
+
+        return projects;
+    }
 }
