@@ -7,6 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import {
   DropdownMenu,
@@ -227,8 +228,12 @@ export default function StakingPage() {
                           type="number"
                           name=""
                           id="amount"
+                          min={100}
                           className="bg-[#242424] p-2 border border-[#9A9A9A] rounded-sm h-[50px]"
                         />
+                        <DialogDescription>
+                          Minimum staking is 100 ADY
+                        </DialogDescription>
                       </div>
                       <button
                         type="button"
