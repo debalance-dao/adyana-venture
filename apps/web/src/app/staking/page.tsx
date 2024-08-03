@@ -32,7 +32,7 @@ export default function StakingPage() {
   const { writeContract, getAddresses } = useWalletClient();
   const { simulateContract, readContract } = usePublicClient();
   const [allProjects, setAllProjects] = useState<TProjectList | null>(null);
-  const [stakingDays, setStakingDays] = useState();
+  const [stakingDays, setStakingDays] = useState<number>();
   const getWalletAddress = async () => {
     const [account] = await getAddresses();
     return account;
