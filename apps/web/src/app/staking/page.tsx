@@ -17,30 +17,56 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown } from "lucide-react";
-import adyContract from "../../../../contracts/artifacts/contracts/AdyanaEthSea.sol/AdyanaToken.json";
-import type { AdyanaToken$Type } from "../../../../contracts/artifacts/contracts/AdyanaEthSea.sol/AdyanaToken";
 import useWalletClient from "@/hooks/useWalletClient";
 import usePublicClient from "@/hooks/usePublicClient";
-import { manta } from "viem/chains";
-
-type ExtractProperty<T, K extends keyof T> = T[K];
-type TContractABI = ExtractProperty<AdyanaToken$Type, "abi">;
-
+import contract from "@/lib/contract";
+import { customChain } from "@/lib/blockchain";
+import { useEffect, useState } from "react";
+type TProjectList = readonly {
+  name: string;
+  description: string;
+  raisedFunds: bigint;
+  totalVoters: bigint;
+}[];
 export default function StakingPage() {
-  const { writeContract } = useWalletClient();
-  const { simulateContract } = usePublicClient();
-
-  const voteProject = async () => {
+  const { writeContract, getAddresses } = useWalletClient();
+  const { simulateContract, readContract } = usePublicClient();
+  const [allProjects, setAllProjects] = useState<TProjectList | null>(null);
+  const [stakingDays, setStakingDays] = useState();
+  const getWalletAddress = async () => {
+    const [account] = await getAddresses();
+    return account;
+  };
+  const interactConfig = {
+    abi: contract.abi,
+    chain: customChain.localNet,
+    address: contract.address,
+  };
+  const addProject = async () => {
     const { request } = await simulateContract({
-      abi: adyContract.abi as TContractABI,
-      account: "0x123",
-      chain: manta,
-      address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-      functionName: "voteProject",
-      args: [1 as unknown as bigint],
+      ...interactConfig,
+      account: await getWalletAddress(),
+      functionName: "addProject",
+      args: ["debalance DAO", "the first dao in lombok"],
     });
     writeContract(request);
   };
+
+  const getProjectList = async () => {
+    const projectList = await readContract({
+      abi: interactConfig.abi,
+      address: interactConfig.address,
+      account: await getWalletAddress(),
+      functionName: "getAllProjects",
+      args: [],
+    });
+    return projectList;
+  };
+  useEffect(() => {
+    (async () => {
+      setAllProjects(await getProjectList());
+    })();
+  }, []);
 
   return (
     <main className="relative text-white">
@@ -150,7 +176,10 @@ export default function StakingPage() {
                           Choose how many days
                         </label>
                         <DropdownMenu>
-                          <DropdownMenuTrigger className="bg-[#242424] p-2 border border-[#9A9A9A] rounded-sm flex justify-end px-[22px] h-[50px] items-center">
+                          <DropdownMenuTrigger className="bg-[#242424] p-2 border border-[#9A9A9A] rounded-sm flex justify-between px-[22px] h-[50px] items-center">
+                            <span>
+                              {stakingDays} {stakingDays && "Days"}
+                            </span>
                             <ChevronDown />
                           </DropdownMenuTrigger>
                           <DropdownMenuContent
@@ -179,6 +208,7 @@ export default function StakingPage() {
                               <DropdownMenuItem
                                 key={d.days}
                                 className="text-xl hover:bg-gray-300"
+                                onClick={() => setStakingDays(d.days)}
                               >
                                 {d.days} days
                               </DropdownMenuItem>
@@ -213,24 +243,28 @@ export default function StakingPage() {
             </div>
             <TabsContent value="live">
               <div className="space-y-2">
-                {Array.from({ length: 5 }).map((d, i) => (
+                {allProjects?.toReversed().map((d, i) => (
                   <div
                     key={`d${d}`}
                     className="flex gap-2 items-center justify-between p-4 rounded-md bg-[#242424]"
                   >
                     <span className="flex h-12 w-12 aspect-square rounded-sm bg-yellow-400" />
-                    <p className="">Community Raise of Hand</p>
+                    <p className="">{d.name}</p>
                     <div className="text-center">
                       <h1 className="text-[10px] text-[#9A9A9A]">
                         Total Raise
                       </h1>
-                      <p className="text-[14px] font-medium">$4000</p>
+                      <p className="text-[14px] font-medium">
+                        ${Number(d.raisedFunds)}
+                      </p>
                     </div>
                     <div className="text-center">
                       <h1 className="text-[10px] text-[#9A9A9A]">
                         PARTICIPANT
                       </h1>
-                      <p className="text-[14px] font-medium">100</p>
+                      <p className="text-[14px] font-medium">
+                        {Number(d.totalVoters)}
+                      </p>
                     </div>
                     <div className="text-center">
                       <h1 className="text-[10px] text-[#9A9A9A]">STATUS</h1>
