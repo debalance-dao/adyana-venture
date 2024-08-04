@@ -88,12 +88,14 @@ export default function LandingPage() {
               </div>
             ))}
           </div>
-          <button
-            type="button"
-            className="py-[12px] px-[46px] border border-[#FCD22F] font-medium text-2xl mt-8"
-          >
-            EXPLORE {">"}
-          </button>
+          <Link href="/staking">
+            <button
+              type="button"
+              className="py-[12px] px-[46px] border border-[#FCD22F] font-medium text-2xl mt-8"
+            >
+              EXPLORE {">"}
+            </button>
+          </Link>
         </div>
       </section>
       <section className="flex justify-center">
@@ -192,12 +194,15 @@ export default function LandingPage() {
             <div className="text-[40px] font-medium">
               Want to invest in a project on Adiyana?
             </div>
-            <button
-              type="button"
-              className="py-[12px] px-[46px] border border-[#FCD22F] font-medium text-2xl mt-8"
-            >
-              EXPLORE {">"}
-            </button>
+
+            <Link href="/staking">
+              <button
+                type="button"
+                className="py-[12px] px-[46px] border border-[#FCD22F] font-medium text-2xl mt-8"
+              >
+                EXPLORE {">"}
+              </button>
+            </Link>
           </div>
           <div className="flex flex-col gap-8 justify-center">
             {[
