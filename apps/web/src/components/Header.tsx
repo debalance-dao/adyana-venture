@@ -22,9 +22,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { mantaSepoliaTestnet } from "viem/chains";
 
 export default function Header() {
-  const { requestAddresses, getAddresses, writeContract } = useWalletClient();
+  const { requestAddresses, getAddresses, writeContract, addChain } =
+    useWalletClient();
   const { readContract, simulateContract } = usePublicClient();
   const [add, setAdd] = useState<Address | null>(null);
   const [balance, setBalance] = useState<number>();
@@ -136,8 +138,11 @@ export default function Header() {
             >
               <DropdownMenuLabel>Add/Switch Network</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-xl hover:bg-gray-300">
-                Manta Pacific Testnet
+              <DropdownMenuItem
+                className="text-xl hover:bg-gray-300"
+                onClick={() => addChain({ chain: mantaSepoliaTestnet })}
+              >
+                Manta Sepolia Testnet
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
