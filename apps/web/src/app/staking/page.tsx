@@ -22,7 +22,7 @@ import useWalletClient from "@/hooks/useWalletClient";
 import usePublicClient from "@/hooks/usePublicClient";
 import contract from "@/lib/contract";
 import { customChain } from "@/lib/blockchain";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 type TProjectList = readonly {
   name: string;
   description: string;
@@ -49,6 +49,16 @@ export default function StakingPage() {
       account: await getWalletAddress(),
       functionName: "addProject",
       args: ["debalance DAO", "the first dao in lombok"],
+    });
+    writeContract(request);
+  };
+
+  const stakeToken = async (amount: number, periodInSeconds: number) => {
+    const { request } = await simulateContract({
+      ...interactConfig,
+      account: await getWalletAddress(),
+      functionName: "stakeTokens",
+      args: [amount as unknown as bigint, periodInSeconds as unknown as bigint],
     });
     writeContract(request);
   };
@@ -217,30 +227,47 @@ export default function StakingPage() {
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </div>
-                      <div className="flex flex-col gap-5">
-                        <label
-                          htmlFor="amount"
-                          className="text-[16px] font-normal text-[#9A9A9A]"
-                        >
-                          Input the amount
-                        </label>
-                        <input
-                          type="number"
-                          name=""
-                          id="amount"
-                          min={100}
-                          className="bg-[#242424] p-2 border border-[#9A9A9A] rounded-sm h-[50px]"
-                        />
-                        <DialogDescription>
-                          Minimum staking is 100 ADY
-                        </DialogDescription>
-                      </div>
-                      <button
-                        type="button"
-                        className="bg-[#F8C200] text-[20px] text-black w-full py-2 rounded-sm h-[60px]"
+                      <form
+                        action=""
+                        onSubmit={(e: FormEvent<HTMLFormElement>) => {
+                          e.preventDefault();
+                          const form = e.currentTarget;
+                          const amountInput = form.elements.namedItem(
+                            "amount",
+                          ) as HTMLInputElement;
+                          const amount = amountInput.value;
+                          stakingDays &&
+                            stakeToken(
+                              Number(amount),
+                              stakingDays * 24 * 60 * 60,
+                            );
+                        }}
                       >
-                        STAKE
-                      </button>
+                        <div className="flex flex-col gap-5">
+                          <label
+                            htmlFor="amount"
+                            className="text-[16px] font-normal text-[#9A9A9A]"
+                          >
+                            Input the amount
+                          </label>
+                          <input
+                            type="number"
+                            name="amount"
+                            id="amount"
+                            min={100}
+                            className="bg-[#242424] p-2 border border-[#9A9A9A] rounded-sm h-[50px]"
+                          />
+                          <DialogDescription>
+                            Minimum staking is 100 ADY
+                          </DialogDescription>
+                        </div>
+                        <button
+                          type="submit"
+                          className="bg-[#F8C200] text-[20px] text-black w-full py-2 rounded-sm h-[60px]"
+                        >
+                          STAKE
+                        </button>
+                      </form>
                     </div>
                   </DialogContent>
                 </Dialog>
