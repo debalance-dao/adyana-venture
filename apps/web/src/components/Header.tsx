@@ -1,7 +1,7 @@
 "use client";
 import useWalletClient from "@/hooks/useWalletClient";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import type { Address } from "viem";
 import {
   Dialog,
@@ -9,14 +9,15 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import usePublicClient from "@/hooks/usePublicClient";
 import { customChain } from "@/lib/blockchain";
 import contract from "@/lib/contract";
 
 export default function Header() {
-  const { requestAddresses, getAddresses } = useWalletClient();
-  const { readContract } = usePublicClient();
+  const { requestAddresses, getAddresses, writeContract } = useWalletClient();
+  const { readContract, simulateContract } = usePublicClient();
   const [add, setAdd] = useState<Address | null>(null);
   const [balance, setBalance] = useState<number>();
 
@@ -24,6 +25,17 @@ export default function Header() {
     abi: contract.abi,
     chain: customChain.localNet,
     address: contract.address,
+  };
+
+  const depositAdy = async (amount: number) => {
+    const { request } = await simulateContract({
+      ...interactConfig,
+      account: await getWalletAddress(),
+      functionName: "deposit",
+      args: [],
+      value: amount as unknown as bigint,
+    });
+    writeContract(request);
   };
 
   const getWalletAddress = async () => {
@@ -47,16 +59,66 @@ export default function Header() {
       setBalance(Number(userbalance));
     })();
   }, []);
+
+  function handleDeposit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const amountInput = form.elements.namedItem("amount") as HTMLInputElement;
+    const amount = amountInput.value;
+    depositAdy(Number(amount));
+
+    console.log({ amount });
+  }
   return (
     <header className="flex justify-center text-white p-8">
       <div className="max-w-7xl flex justify-between w-full">
         <div className="text-[#F8C200]">Adyana</div>
         <nav className="flex gap-4">
-          {["home", "staking", "buy"].map((d) => (
-            <Link href={`/${d}`} key={d}>
-              <div className="">{d}</div>
-            </Link>
-          ))}
+          <Link href="/">
+            <div className="">home</div>
+          </Link>
+          <Link href="/staking">
+            <div className="">staking</div>
+          </Link>
+
+          <Dialog>
+            <DialogTrigger className="h-fit">
+              <button type="button">buy</button>
+            </DialogTrigger>
+            <DialogContent className="bg-[#1b1b1b] text-white p-16 w-[520px]">
+              <DialogHeader>
+                <DialogTitle className="w-full text-center text-[36px] font-medium">
+                  Buy $ADY
+                </DialogTitle>
+              </DialogHeader>
+              <form className="w-full space-y-[40px]" onSubmit={handleDeposit}>
+                <div className="flex flex-col gap-5">
+                  <label
+                    htmlFor="amount"
+                    className="text-[16px] font-normal text-[#9A9A9A]"
+                  >
+                    Input the amount
+                  </label>
+                  <input
+                    type="number"
+                    name="amount"
+                    id="amount"
+                    min={100}
+                    className="bg-[#242424] p-2 border border-[#9A9A9A] rounded-sm h-[50px]"
+                  />
+                  <DialogDescription>
+                    Minimum deposit is 100 $ADY,$ADY price is 1 GWEY/1 $ADY
+                  </DialogDescription>
+                </div>
+                <button
+                  type="submit"
+                  className="bg-[#F8C200] text-[20px] text-black w-full py-2 rounded-sm h-[60px]"
+                >
+                  BUY
+                </button>
+              </form>
+            </DialogContent>
+          </Dialog>
         </nav>
         <div className="">
           {add === null ? (
