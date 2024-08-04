@@ -67,11 +67,19 @@ export default function StakingPage() {
     const projectList = await readContract({
       abi: interactConfig.abi,
       address: interactConfig.address,
-      account: await getWalletAddress(),
       functionName: "getAllProjects",
       args: [],
     });
     return projectList;
+  };
+  const invest = async (amount: number, projectNumber: number) => {
+    const { request } = await simulateContract({
+      ...interactConfig,
+      account: await getWalletAddress(),
+      functionName: "invest",
+      args: [amount as unknown as bigint, projectNumber as unknown as bigint],
+    });
+    writeContract(request);
   };
   useEffect(() => {
     (async () => {
@@ -304,12 +312,74 @@ export default function StakingPage() {
                         FINISHED
                       </p>
                     </div>
-                    <button
-                      type="button"
-                      className="bg-[#9A9A9A] rounded-sm text-black px-12 py-2"
-                    >
-                      CLAIM
-                    </button>
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        className="bg-[#9A9A9A] rounded-sm text-black px-12 py-2"
+                      >
+                        CLAIM
+                      </button>
+                      <button
+                        type="button"
+                        className="bg-[#151100] rounded-sm text-[#F8C200] px-12 py-2"
+                      >
+                        VOTE
+                      </button>
+                      <Dialog>
+                        <DialogTrigger className="h-fit">
+                          <button
+                            type="button"
+                            className="bg-[#F8C200] rounded-sm text-black px-12 py-2"
+                          >
+                            INVEST
+                          </button>
+                        </DialogTrigger>
+                        <DialogContent className="bg-[#1b1b1b] text-white p-16 w-[520px]">
+                          <DialogHeader>
+                            <DialogTitle className="w-full text-center text-[36px] font-medium">
+                              INVESTMENT
+                            </DialogTitle>
+                          </DialogHeader>
+                          <form
+                            className="w-full space-y-[40px]"
+                            onSubmit={(e: FormEvent<HTMLFormElement>) => {
+                              e.preventDefault();
+                              const form = e.currentTarget;
+                              const amountInput = form.elements.namedItem(
+                                "amount",
+                              ) as HTMLInputElement;
+                              const amount = amountInput.value;
+                              invest(Number(amount), i);
+                            }}
+                          >
+                            <div className="flex flex-col gap-5">
+                              <label
+                                htmlFor="amount"
+                                className="text-[16px] font-normal text-[#9A9A9A]"
+                              >
+                                Input the amount to invest
+                              </label>
+                              <input
+                                type="number"
+                                name="amount"
+                                id="amount"
+                                min={1}
+                                className="bg-[#242424] p-2 border border-[#9A9A9A] rounded-sm h-[50px]"
+                              />
+                              <DialogDescription>
+                                Minimum investment is 1 $ADY
+                              </DialogDescription>
+                            </div>
+                            <button
+                              type="submit"
+                              className="bg-[#F8C200] text-[20px] text-black w-full py-2 rounded-sm h-[60px]"
+                            >
+                              INVEST NOW
+                            </button>
+                          </form>
+                        </DialogContent>
+                      </Dialog>
+                    </div>
                   </div>
                 ))}
               </div>
