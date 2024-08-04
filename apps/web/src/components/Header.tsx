@@ -14,6 +14,14 @@ import {
 import usePublicClient from "@/hooks/usePublicClient";
 import { customChain } from "@/lib/blockchain";
 import contract from "@/lib/contract";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function Header() {
   const { requestAddresses, getAddresses, writeContract } = useWalletClient();
@@ -80,7 +88,6 @@ export default function Header() {
           <Link href="/staking">
             <div className="">staking</div>
           </Link>
-
           <Dialog>
             <DialogTrigger className="h-fit">
               <button type="button">buy</button>
@@ -119,6 +126,21 @@ export default function Header() {
               </form>
             </DialogContent>
           </Dialog>
+          <DropdownMenu>
+            <DropdownMenuTrigger className="h-fit">
+              <button type="button">chains</button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              className="left-0 border min-w-fit bg-[#242424] text-white"
+              align="end"
+            >
+              <DropdownMenuLabel>Add/Switch Network</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="text-xl hover:bg-gray-300">
+                Manta Pacific Testnet
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </nav>
         <div className="">
           {add === null ? (
