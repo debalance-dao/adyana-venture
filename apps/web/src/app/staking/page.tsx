@@ -309,7 +309,7 @@ export default function StakingPage() {
                     <div className="text-center">
                       <h1 className="text-[10px] text-[#9A9A9A]">STATUS</h1>
                       <p className="text-[14px] font-medium text-[#F8C200]">
-                        FINISHED
+                        LIVE
                       </p>
                     </div>
                     <div className="flex gap-2">
