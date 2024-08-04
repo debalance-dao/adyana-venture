@@ -123,6 +123,7 @@ contract AdyanaToken is ERC20Interface {
         balances[msg.sender] = balances[msg.sender].sub(_amount);
         Project storage thisProject = projectList[_projectNum];
         thisProject.raisedFunds = thisProject.raisedFunds.add(_amount);
+        voters[msg.sender][_projectNum].amount += _amount;
     }
 
     function stakeTokens(
