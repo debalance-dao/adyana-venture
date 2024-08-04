@@ -9,8 +9,48 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useState, useEffect } from "react";
+import usePublicClient from "@/hooks/usePublicClient";
+import useWalletClient from "@/hooks/useWalletClient";
+import contract from "@/lib/contract";
+import { customChain } from "@/lib/blockchain";
+
+type TProjectList = readonly {
+  name: string;
+  description: string;
+  raisedFunds: bigint;
+  totalVoters: bigint;
+}[];
+
+const interactConfig = {
+  abi: contract.abi,
+  chain: customChain.localNet,
+  address: contract.address,
+};
 
 export default function LandingPage() {
+  const { getAddresses } = useWalletClient();
+  const { readContract } = usePublicClient();
+  const [allProjects, setAllProjects] = useState<TProjectList | null>(null);
+
+  const getWalletAddress = async () => {
+    const [account] = await getAddresses();
+    return account;
+  };
+  const getProjectList = async () => {
+    const projectList = await readContract({
+      abi: interactConfig.abi,
+      address: interactConfig.address,
+      functionName: "getAllProjects",
+      args: [],
+    });
+    return projectList;
+  };
+  useEffect(() => {
+    (async () => {
+      setAllProjects(await getProjectList());
+    })();
+  }, []);
   return (
     <main className="flex flex-col grow relative text-white gap-8">
       <div className="absolute -top-24 right-0 -z-40 w-1/2 overflow-hidden">
@@ -64,7 +104,7 @@ export default function LandingPage() {
           </h1>
           <ScrollArea className="rounded-md whitespace-nowrap">
             <div className="flex w-max space-x-4">
-              {Array.from({ length: 10 }).map((d, index) => (
+              {allProjects?.map((d, index) => (
                 <Card
                   key={`${d}-keyssss`}
                   className="w-[400px] bg-[#222222] border-none"
@@ -74,9 +114,7 @@ export default function LandingPage() {
                   </CardHeader>
                   <CardContent className="flex flex-col text-white gap-4">
                     <div className="flex justify-between gap-2">
-                      <div className="text-[16px] font-bold">
-                        Project {index + 1}
-                      </div>
+                      <div className="text-[16px] font-bold">{d.name}</div>
                       <div className="">
                         Return
                         <span className="text-[16px] font-bold ml-2">5%</span>
@@ -84,7 +122,9 @@ export default function LandingPage() {
                     </div>
                     <div className="flex justify-between gap-2">
                       <div className="text-xs font-light">Total Raised</div>
-                      <div className="text-[16px] font-bold">TBA</div>
+                      <div className="text-[16px] font-bold">
+                        {Number(d.raisedFunds)}
+                      </div>
                     </div>
                   </CardContent>
                   <CardFooter>
