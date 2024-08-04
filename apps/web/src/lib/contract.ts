@@ -6,7 +6,7 @@ type ExtractProperty<T, K extends keyof T> = T[K];
 type TContractABI = ExtractProperty<AdyanaToken$Type, "abi">;
 
 const abi = adyContract.abi as TContractABI;
-const address: Address = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+const address: Address = "0x93a227a7897985e531c2984c2167F23eE96DD05a";
 const contract = {
   abi,
   address,

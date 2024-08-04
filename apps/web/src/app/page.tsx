@@ -14,6 +14,7 @@ import usePublicClient from "@/hooks/usePublicClient";
 import useWalletClient from "@/hooks/useWalletClient";
 import contract from "@/lib/contract";
 import { customChain } from "@/lib/blockchain";
+import { mantaSepoliaTestnet } from "viem/chains";
 
 type TProjectList = readonly {
   name: string;
@@ -24,7 +25,7 @@ type TProjectList = readonly {
 
 const interactConfig = {
   abi: contract.abi,
-  chain: customChain.localNet,
+  chain: mantaSepoliaTestnet,
   address: contract.address,
 };
 

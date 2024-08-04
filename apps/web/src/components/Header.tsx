@@ -38,7 +38,7 @@ export default function Header() {
 
   const interactConfig = {
     abi: contract.abi,
-    chain: customChain.localNet,
+    chain: mantaSepoliaTestnet,
     address: contract.address,
   };
 

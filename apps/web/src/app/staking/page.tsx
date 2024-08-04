@@ -23,6 +23,7 @@ import usePublicClient from "@/hooks/usePublicClient";
 import contract from "@/lib/contract";
 import { customChain } from "@/lib/blockchain";
 import { type FormEvent, useEffect, useState } from "react";
+import { mantaSepoliaTestnet } from "viem/chains";
 type TProjectList = readonly {
   name: string;
   description: string;
@@ -40,7 +41,7 @@ export default function StakingPage() {
   };
   const interactConfig = {
     abi: contract.abi,
-    chain: customChain.localNet,
+    chain: mantaSepoliaTestnet,
     address: contract.address,
   };
   const addProject = async () => {
