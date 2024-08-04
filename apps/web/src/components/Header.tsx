@@ -25,8 +25,13 @@ import {
 import { mantaSepoliaTestnet } from "viem/chains";
 
 export default function Header() {
-  const { requestAddresses, getAddresses, writeContract, addChain } =
-    useWalletClient();
+  const {
+    requestAddresses,
+    getAddresses,
+    writeContract,
+    addChain,
+    watchAsset,
+  } = useWalletClient();
   const { readContract, simulateContract } = usePublicClient();
   const [add, setAdd] = useState<Address | null>(null);
   const [balance, setBalance] = useState<number>();
@@ -143,6 +148,21 @@ export default function Header() {
                 onClick={() => addChain({ chain: mantaSepoliaTestnet })}
               >
                 Manta Sepolia Testnet
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="text-xl hover:bg-gray-300"
+                onClick={() =>
+                  watchAsset({
+                    type: "ERC20",
+                    options: {
+                      address: contract.address,
+                      decimals: 0,
+                      symbol: "ADY",
+                    },
+                  })
+                }
+              >
+                Add $ADY to my wallet
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
