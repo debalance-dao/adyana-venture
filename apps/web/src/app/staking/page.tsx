@@ -22,7 +22,7 @@ import useWalletClient from "@/hooks/useWalletClient";
 import usePublicClient from "@/hooks/usePublicClient";
 import contract from "@/lib/contract";
 import { customChain } from "@/lib/blockchain";
-import { FormEvent, useEffect, useState } from "react";
+import { type FormEvent, useEffect, useState } from "react";
 type TProjectList = readonly {
   name: string;
   description: string;
@@ -81,6 +81,17 @@ export default function StakingPage() {
     });
     writeContract(request);
   };
+
+  const voteToProject = async (projectNumber: number) => {
+    const { request } = await simulateContract({
+      ...interactConfig,
+      account: await getWalletAddress(),
+      functionName: "voteProject",
+      args: [projectNumber as unknown as bigint],
+    });
+    writeContract(request);
+  };
+
   useEffect(() => {
     (async () => {
       setAllProjects(await getProjectList());
@@ -322,6 +333,7 @@ export default function StakingPage() {
                       <button
                         type="button"
                         className="bg-[#151100] rounded-sm text-[#F8C200] px-12 py-2"
+                        onClick={() => voteToProject(i)}
                       >
                         VOTE
                       </button>
