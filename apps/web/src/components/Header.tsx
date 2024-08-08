@@ -2,7 +2,7 @@
 import useWalletClient from "@/hooks/useWalletClient";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import type { Address } from "viem";
+import { parseEther, type Address } from "viem";
 import {
   Dialog,
   DialogContent,
@@ -75,14 +75,12 @@ export default function Header() {
     })();
   }, []);
 
-  const tokenPriceInGWEI = 1_000_000_000;
   function handleDeposit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
     const amountInput = form.elements.namedItem("amount") as HTMLInputElement;
     const amount = amountInput.value;
-    depositAdy(Number(amount) * tokenPriceInGWEI);
-
+    depositAdy(Number(parseEther(amount, "gwei")));
     console.log({ amount });
   }
   return (
