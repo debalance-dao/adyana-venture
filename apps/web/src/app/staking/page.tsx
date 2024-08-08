@@ -95,7 +95,13 @@ export default function StakingPage() {
 
   useEffect(() => {
     (async () => {
-      setAllProjects(await getProjectList());
+      if (typeof window?.ethereum !== "undefined") {
+        try {
+          setAllProjects(await getProjectList());
+        } catch (error) {
+          console.error("Failed to get project list:", error);
+        }
+      }
     })();
   }, []);
 

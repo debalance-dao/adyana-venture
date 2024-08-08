@@ -69,9 +69,15 @@ export default function Header() {
   };
   useEffect(() => {
     (async () => {
-      const userbalance = await getBalance();
-      console.log({ userbalance });
-      setBalance(Number(userbalance));
+      if (typeof window?.ethereum !== "undefined") {
+        try {
+          const userbalance = await getBalance();
+          console.log({ userbalance });
+          setBalance(Number(userbalance));
+        } catch (error) {
+          console.error("Failed to get balance:", error);
+        }
+      }
     })();
   }, []);
 
