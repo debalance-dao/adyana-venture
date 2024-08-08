@@ -75,12 +75,13 @@ export default function Header() {
     })();
   }, []);
 
+  const tokenPriceInGWEI = 1_000_000_000;
   function handleDeposit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
     const amountInput = form.elements.namedItem("amount") as HTMLInputElement;
     const amount = amountInput.value;
-    depositAdy(Number(amount));
+    depositAdy(Number(amount) * tokenPriceInGWEI);
 
     console.log({ amount });
   }
