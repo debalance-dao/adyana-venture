@@ -301,7 +301,7 @@ export default function StakingPage() {
             </div>
             <TabsContent value="live">
               <div className="space-y-2">
-                {allProjects?.toReversed().map((d, i) => (
+                {allProjects?.map((d, i) => (
                   <div
                     key={`d${d}`}
                     className="flex gap-2 items-center justify-between p-4 rounded-md bg-[#242424]"
