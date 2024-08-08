@@ -149,7 +149,38 @@ export default function LandingPage() {
             Features
           </h1>
           <div className="grid grid-cols-3 gap-x-5 justify-between gap-y-4 p-8">
-            {Array.from({ length: 6 }).map((d) => (
+            {[
+              {
+                title: "Flexible Multi-chain Support",
+                content:
+                  "Our platform offers one of the most diverse blockchain supports, aiming to create a unified location for both investors and startups.",
+              },
+              {
+                title: "Selectively Chosen Projects",
+                content:
+                  "We carefully select projects through a rigorous vetting process, verifying the origin and legitimacy of the project",
+              },
+              {
+                title: "Fair Distribution",
+                content:
+                  "We understand the importance of delivering opportunities fairly and efficiently.",
+              },
+              {
+                title: "Guaranteed Security",
+                content:
+                  "We prioritize security by implementing multiple layers of protection.",
+              },
+              {
+                title: "Intuitive User Interface",
+                content:
+                  "Our platform is designed with a focus on user experience, providing an easy-to-use and intuitive interface.",
+              },
+              {
+                title: "Engaged Community",
+                content:
+                  "We believe that the community is an essential part of our ecosystem.",
+              },
+            ].map((d) => (
               <div
                 key={`${d}-feats`}
                 className="flex justify-center flex-col items-center text-center w-fit gap-5"
@@ -178,11 +209,9 @@ export default function LandingPage() {
                       strokeLinejoin="round"
                     />
                   </svg>
-                  <div className="font-bold text-[20px]">Lorem, ipsum</div>
+                  <div className="font-bold text-[20px]">{d.title}</div>
                 </div>
-                <div className="font-light text-[20px]">
-                  Lorem ipsum dolor sit amet.
-                </div>
+                <div className="font-light text-[20px]">{d.content}</div>
               </div>
             ))}
           </div>
