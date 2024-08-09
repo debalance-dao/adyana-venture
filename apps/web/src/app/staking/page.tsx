@@ -333,7 +333,7 @@ export default function StakingPage() {
                     <div className="flex gap-2">
                       <button
                         type="button"
-                        className="bg-[#9A9A9A] rounded-sm text-black px-12 py-2"
+                        className="bg-[#9A9A9A] rounded-sm text-black px-12 py-2 hidden"
                       >
                         CLAIM
                       </button>
