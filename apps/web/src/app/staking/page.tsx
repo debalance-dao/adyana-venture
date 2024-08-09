@@ -189,7 +189,7 @@ export default function StakingPage() {
                   <DialogTrigger>
                     <button
                       type="button"
-                      className="bg-[#F8C200] text-[20px] text-black px-16 py-2 h-full rounded-sm"
+                      className="bg-[#F8C200] text-[20px] text-black px-16 py-2 h-full rounded-sm hidden"
                     >
                       Staking
                     </button>
