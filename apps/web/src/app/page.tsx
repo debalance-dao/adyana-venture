@@ -114,34 +114,33 @@ export default function LandingPage() {
           <ScrollArea className="rounded-md whitespace-nowrap">
             <div className="flex w-max space-x-4">
               {allProjects?.map((d, index) => (
-                <Card
-                  key={`${d}-keyssss`}
-                  className="w-[400px] bg-[#222222] border-none"
-                >
-                  <CardHeader>
-                    <div className="bg-yellow-600 h-[177px] rounded-lg" />
-                  </CardHeader>
-                  <CardContent className="flex flex-col text-white gap-4">
-                    <div className="flex justify-between gap-2">
-                      <div className="text-[16px] font-bold">{d.name}</div>
-                      <div className="">
-                        Return
-                        <span className="text-[16px] font-bold ml-2">5%</span>
+                <Link href="/staking" key={`${d}-keyssss`}>
+                  <Card className="w-[400px] bg-[#222222] border-none">
+                    <CardHeader>
+                      <div className="bg-yellow-600 h-[177px] rounded-lg" />
+                    </CardHeader>
+                    <CardContent className="flex flex-col text-white gap-4">
+                      <div className="flex justify-between gap-2">
+                        <div className="text-[16px] font-bold">{d.name}</div>
+                        <div className="">
+                          Return
+                          <span className="text-[16px] font-bold ml-2">5%</span>
+                        </div>
                       </div>
-                    </div>
-                    <div className="flex justify-between gap-2">
-                      <div className="text-xs font-light">Total Raised</div>
-                      <div className="text-[16px] font-bold">
-                        {Number(d.raisedFunds)}
+                      <div className="flex justify-between gap-2">
+                        <div className="text-xs font-light">Total Raised</div>
+                        <div className="text-[16px] font-bold">
+                          {Number(d.raisedFunds)}
+                        </div>
                       </div>
-                    </div>
-                  </CardContent>
-                  <CardFooter>
-                    <p className="bg-[#171614] w-full p-2 text-white rounded-md">
-                      TBA
-                    </p>
-                  </CardFooter>
-                </Card>
+                    </CardContent>
+                    <CardFooter>
+                      <p className="bg-[#171614] w-full p-2 text-white rounded-md text-center">
+                        TBA
+                      </p>
+                    </CardFooter>
+                  </Card>
+                </Link>
               ))}
             </div>
             <ScrollBar orientation="horizontal" />
