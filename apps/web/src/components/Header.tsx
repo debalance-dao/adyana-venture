@@ -171,6 +171,7 @@ export default function Header() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          <Link href="/blogs">blogs</Link>
         </nav>
         <div className="">
           {add === null ? (
