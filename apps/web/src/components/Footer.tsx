@@ -21,7 +21,7 @@ export default function Footer() {
           <Facebook />
         </div>
         <div className="border-t border-white w-full flex justify-between mt-[100px]">
-          <div className="">Copyright © 2021 . All rights reserved.</div>
+          <div className="">Copyright © 2024 . All rights reserved.</div>
           <div className="">Term Of Service | Privacy Police | Help Center</div>
         </div>
       </div>
